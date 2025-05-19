@@ -1,0 +1,225 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+}
+
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+}
+
+.joystick {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    width: 120px;
+    height: 120px;
+    background-color: rgba(255, 182, 193, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    border: 3px solid rgba(255, 182, 193, 0.4);
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
+}
+
+.joystick-knob {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(45deg, #ffb6c1, #ffc0cb);
+    border-radius: 50%;
+    cursor: move;
+    transition: transform 0.1s ease;
+    box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 182, 193, 0.85);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255, 182, 193, 0.5);
+    box-shadow: 0 0 30px rgba(255, 182, 193, 0.5);
+}
+
+.modal-content img {
+    max-width: 80vw;
+    max-height: 70vh;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.4);
+}
+
+.game-button {
+    padding: 12px 30px;
+    background: linear-gradient(45deg, #ffb6c1, #ffc0cb);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
+}
+
+.game-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 182, 193, 0.6);
+}
+
+.win-effect {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 182, 193, 0.9);
+    z-index: 1001;
+    animation: fadeIn 1s ease-in;
+}
+
+.win-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 1002;
+}
+
+.win-content img {
+    max-width: 80vw;
+    max-height: 60vh;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 182, 193, 0.6);
+}
+
+.win-content h2 {
+    font-size: 3em;
+    color: #ff69b4;
+    text-shadow: 0 0 20px rgba(255, 105, 180, 0.7);
+    margin-bottom: 20px;
+    animation: glow 2s ease-in-out infinite;
+}
+
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1001;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ff69b4;
+    opacity: 0.7;
+    animation: fall 3s linear infinite;
+}
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffb6c1;
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-content h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.progress-bar {
+    width: 300px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ffb6c1, #ffc0cb);
+    transition: width 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 10px rgba(255, 105, 180, 0.5); }
+    50% { text-shadow: 0 0 30px rgba(255, 105, 180, 0.8); }
+    100% { text-shadow: 0 0 10px rgba(255, 105, 180, 0.5); }
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+} 
