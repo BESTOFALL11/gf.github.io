@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To my pooker!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop id="myVideo">
+            <source src="background.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Green Flower Easter Eggs -->
+    <div class="flower-easter-egg" data-message="You found a lucky green flower! 🌸" style="top: 10%; left: 5%;">🌸</div>
+    <div class="flower-easter-egg" data-message="Another green flower! You're amazing! 🌼" style="bottom: 15%; right: 10%;">🌼</div>
+    <div class="flower-easter-egg" data-message="Secret green flower discovered! 💚" style="top: 60%; left: 80%;">💐</div>
+
+    <!-- Easter Eggs -->
+    <div class="easter-egg" data-message="You found me! 💝">Click me!</div>
+    <div class="easter-egg" data-message="Another secret! 💖">Find me!</div>
+    <div class="easter-egg" data-message="You're so good at finding secrets! 💕" style="top: 70%; left: 60%; position: fixed;">Secret!</div>
+
+    <div class="container">
+        <header>
+            <h1>You Mean So Much to Me!</h1>
+            <!-- Hidden easter egg in the title -->
+            <span class="hidden-easter-egg" data-message="You found the hidden heart! 💗">❤️</span>
+        </header>
+        <main>
+            <p class="message">I just wanted to let you know how much I appreciate you my little pooker I love you so much and you are my most precious girl ever. I am the happiest person ever to have met you 
+                I LOVE YOUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU Miuuuuuuu.</p>
+            <div class="hearts-container">
+                <!-- Hearts will be added here by JavaScript -->
+            </div>
+            <div id="special-message-container" class="hidden">
+                <p id="special-message"></p>
+            </div>
+        </main>
+        <footer>
+            <p>Made with ❤️</p>
+            <!-- Hidden easter egg in the footer -->
+            <span class="hidden-easter-egg" data-message="You found another secret! 💓">💝</span>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

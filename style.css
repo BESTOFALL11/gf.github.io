@@ -1,0 +1,284 @@
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif; /* Cute font */
+    background-color: #ffe4e1; /* Light pink background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Hide scrollbars from overflowing hearts */
+    position: relative;
+}
+
+.video-background {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: #ffb6c1;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center calc(30% - 18px);
+    opacity: 0.8;
+    transform: scale(0.65);
+    transform-origin: center center;
+    aspect-ratio: 9/16;
+    max-width: 56.25vh; /* This maintains 9:16 ratio */
+}
+
+/* Adjust the pink tint overlay to be more transparent */
+.video-background::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 192, 203, 0.1); /* Even more transparent overlay */
+    z-index: 0;
+}
+
+.container {
+    text-align: center;
+    background: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 30px;
+    border-radius: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+header h1 {
+    color: #ff1493; /* Brighter pink for title */
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    position: relative;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow for better visibility */
+}
+
+.message {
+    color: #ff1493; /* Brighter pink for message */
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for readability */
+}
+
+.hearts-container {
+    position: relative; /* To absolutely position hearts within */
+    min-height: 100px; /* Ensure space for hearts */
+    margin-bottom: 20px;
+}
+
+.heart {
+    width: 20px;
+    height: 20px;
+    background-color: #ff1493;
+    position: absolute;
+    transform: rotate(-45deg);
+    animation: fall 8s linear infinite;
+    cursor: pointer;
+    transition: transform 0.2s ease-out;
+    filter: drop-shadow(0 0 2px rgba(255, 20, 147, 0.5));
+    will-change: transform;
+}
+
+.heart:before,
+.heart:after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #ff1493;
+    border-radius: 50%;
+    position: absolute;
+    will-change: transform;
+}
+
+.heart:before {
+    top: -10px;
+    left: 0;
+}
+
+.heart:after {
+    top: 0;
+    left: 10px;
+}
+
+.heart:hover {
+    transform: rotate(-45deg) scale(1.2);
+    filter: drop-shadow(0 0 4px rgba(255, 20, 147, 0.8));
+}
+
+/* Animation for falling hearts */
+@keyframes fall {
+    0% {
+        top: -50px;
+        opacity: 1;
+        transform: rotate(-45deg) scale(1);
+    }
+    50% {
+        transform: rotate(-45deg) scale(1.05);
+    }
+    100% {
+        top: 120%;
+        opacity: 0.8;
+        transform: rotate(-45deg) scale(1);
+    }
+}
+
+/* Animation for pulsing hearts */
+@keyframes pulse {
+    0% {
+        transform: rotate(-45deg) scale(1);
+    }
+    100% {
+        transform: rotate(-45deg) scale(1.1);
+    }
+}
+
+/* Add transition for smooth message toggle */
+#special-message-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255, 20, 147, 0.9); /* More vibrant pink */
+    border-radius: 10px;
+    color: white; /* White text for better contrast */
+    font-size: 1.3em;
+    border: 2px solid #ff69b4;
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+#special-message-container.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    margin-top: 0;
+    padding: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+footer p {
+    margin-top: 30px;
+    color: #ff1493; /* Brighter pink */
+    font-size: 0.9em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Easter Egg Styles */
+.easter-egg {
+    position: fixed;
+    padding: 5px 10px;
+    background-color: rgba(255, 20, 147, 0.9); /* More vibrant pink */
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8em;
+    color: white; /* White text for better contrast */
+    transition: all 0.3s ease;
+    z-index: 2;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.easter-egg:hover {
+    transform: scale(1.1);
+    background-color: #ff1493; /* Solid bright pink on hover */
+    filter: drop-shadow(0 0 4px rgba(255, 20, 147, 0.8));
+}
+
+/* Position the easter eggs */
+.easter-egg:nth-child(1) {
+    top: 20%;
+    left: 10%;
+}
+
+.easter-egg:nth-child(2) {
+    top: 60%;
+    right: 15%;
+}
+
+.easter-egg:nth-child(3) {
+    bottom: 30%;
+    left: 20%;
+}
+
+.hidden-easter-egg {
+    opacity: 0.3; /* More visible by default */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #ff1493; /* Bright pink */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.hidden-easter-egg:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Green flower easter egg styles */
+.flower-easter-egg {
+    position: fixed;
+    font-size: 1.3em; /* Smaller than before */
+    color: #39d353;
+    cursor: pointer;
+    z-index: 3;
+    filter: drop-shadow(0 0 6px #39d353);
+    transition: transform 0.2s, filter 0.2s;
+    user-select: none;
+}
+
+.flower-easter-egg:hover {
+    transform: scale(1.2) rotate(-10deg);
+    filter: drop-shadow(0 0 12px #39d353);
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        border-radius: 8px;
+    }
+    header h1 {
+        font-size: 1.3em;
+    }
+    .message {
+        font-size: 1em;
+        padding: 0 4px;
+    }
+    #special-message-container {
+        font-size: 1em;
+        padding: 8px;
+    }
+    .easter-egg, .flower-easter-egg {
+        font-size: 1em !important;
+        padding: 4px 8px;
+    }
+    .flower-easter-egg {
+        font-size: 1em !important;
+    }
+    /* Reposition green flowers for mobile */
+    .flower-easter-egg:nth-of-type(1) { top: 7%; left: 3%; }
+    .flower-easter-egg:nth-of-type(2) { bottom: 10%; right: 5%; }
+    .flower-easter-egg:nth-of-type(3) { top: 55%; left: 70%; }
+    /* Reposition secret button for mobile */
+    .easter-egg[style*="Secret!"] { top: 80% !important; left: 40% !important; }
+} 
