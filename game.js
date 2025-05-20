@@ -146,86 +146,128 @@ class Game {
     }
 
     createDecorations() {
-        // Create flower petals
-        const createFlower = (x, y, z) => {
+        // Improved flowers: fewer, larger, and more stylized
+        const createFlower = (x, y, z, color = 0xff69b4) => {
             const flowerGroup = new THREE.Group();
-            
-            // Create petals
-            const petalGeometry = new THREE.CircleGeometry(0.15, 32);
-            const petalMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0xff69b4,
-                side: THREE.DoubleSide
-            });
-
-            // Create 5 petals in a circle
+            // Petals
+            const petalGeometry = new THREE.CircleGeometry(0.18, 32);
+            const petalMaterial = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
             for (let i = 0; i < 5; i++) {
                 const petal = new THREE.Mesh(petalGeometry, petalMaterial);
                 const angle = (i / 5) * Math.PI * 2;
-                petal.position.set(
-                    Math.cos(angle) * 0.1,
-                    Math.sin(angle) * 0.1,
-                    0
-                );
+                petal.position.set(Math.cos(angle) * 0.13, Math.sin(angle) * 0.13, 0);
                 petal.rotation.z = angle;
                 flowerGroup.add(petal);
             }
-
-            // Add center of flower
-            const centerGeometry = new THREE.CircleGeometry(0.08, 32);
-            const centerMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0xffff00,
-                side: THREE.DoubleSide
-            });
+            // Center
+            const centerGeometry = new THREE.CircleGeometry(0.09, 32);
+            const centerMaterial = new THREE.MeshBasicMaterial({ color: 0xffff99, side: THREE.DoubleSide });
             const center = new THREE.Mesh(centerGeometry, centerMaterial);
             flowerGroup.add(center);
-
-            // Position the entire flower
             flowerGroup.position.set(x, y, z);
             return flowerGroup;
         };
-
-        // Add flowers along the walls
+        // Place flowers at intervals
         for (let i = 0; i < 6; i++) {
-            // Left wall flowers
-            const leftFlower = createFlower(-4.9, 2, -i * 10 - 5);
+            const color = [0xff69b4, 0x87ceeb, 0xffb347, 0x98fb98, 0xffb6c1, 0xd1b3ff][i % 6];
+            const leftFlower = createFlower(-4.7, 1.5, -i * 16 - 5, color);
             leftFlower.rotation.y = Math.PI / 2;
             this.scene.add(leftFlower);
-
-            // Right wall flowers
-            const rightFlower = createFlower(4.9, 2, -i * 10 - 5);
+            const rightFlower = createFlower(4.7, 1.5, -i * 16 - 5, color);
             rightFlower.rotation.y = -Math.PI / 2;
             this.scene.add(rightFlower);
         }
-
-        // Add floating hearts with better shape
-        for (let i = 0; i < 20; i++) {
-            const heartShape = new THREE.Shape();
-            const x = 0, y = 0;
-            heartShape.moveTo(x, y);
-            heartShape.bezierCurveTo(x + 0.1, y + 0.1, x + 0.2, y + 0.2, x + 0.2, y + 0.3);
-            heartShape.bezierCurveTo(x + 0.2, y + 0.4, x + 0.1, y + 0.5, x, y + 0.5);
-            heartShape.bezierCurveTo(x - 0.1, y + 0.5, x - 0.2, y + 0.4, x - 0.2, y + 0.3);
-            heartShape.bezierCurveTo(x - 0.2, y + 0.2, x - 0.1, y + 0.1, x, y);
-
-            const heartGeometry = new THREE.ShapeGeometry(heartShape);
-            const heartMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0xff69b4,
-                transparent: true,
-                opacity: 0.6,
-                side: THREE.DoubleSide
-            });
-            const heart = new THREE.Mesh(heartGeometry, heartMaterial);
-            heart.scale.set(0.2, 0.2, 0.2);
-            heart.position.set(
-                (Math.random() - 0.5) * 8,
-                Math.random() * 4,
-                -Math.random() * 50
+        // Add realistic, cute sitting cats with paw-licking animation
+        this.cats = [];
+        this.catMeowTimers = [];
+        this.catMeowAudio = new Audio('assets/meow.mp3');
+        const catColors = [0xffb6c1, 0x222222, 0xffe066, 0x87ceeb, 0x98fb98, 0xffb347, 0xffffff];
+        for (let i = 0; i < 8; i++) {
+            const catGroup = new THREE.Group();
+            // Body (rounded, sitting)
+            const bodyGeometry = new THREE.SphereGeometry(0.13, 24, 24);
+            const bodyMaterial = new THREE.MeshStandardMaterial({ color: catColors[i % catColors.length] });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.scale.set(1.1, 1.3, 1.1);
+            body.position.set(0, 0.13, 0);
+            catGroup.add(body);
+            // Head (sphere)
+            const headGeometry = new THREE.SphereGeometry(0.09, 24, 24);
+            const head = new THREE.Mesh(headGeometry, bodyMaterial);
+            head.position.set(0, 0.27, 0.09);
+            catGroup.add(head);
+            // Ears (cones)
+            const earGeometry = new THREE.ConeGeometry(0.03, 0.07, 8);
+            const ear1 = new THREE.Mesh(earGeometry, bodyMaterial);
+            ear1.position.set(-0.04, 0.36, 0.13);
+            ear1.rotation.z = Math.PI / 10;
+            catGroup.add(ear1);
+            const ear2 = new THREE.Mesh(earGeometry, bodyMaterial);
+            ear2.position.set(0.04, 0.36, 0.13);
+            ear2.rotation.z = -Math.PI / 10;
+            catGroup.add(ear2);
+            // Tail (curled, torus)
+            const tailGeometry = new THREE.TorusGeometry(0.07, 0.015, 8, 24, Math.PI);
+            const tail = new THREE.Mesh(tailGeometry, bodyMaterial);
+            tail.position.set(0.11, 0.05, -0.07);
+            tail.rotation.z = Math.PI / 2;
+            catGroup.add(tail);
+            // Back paws (spheres)
+            const pawGeometry = new THREE.SphereGeometry(0.025, 12, 12);
+            const paw1 = new THREE.Mesh(pawGeometry, bodyMaterial);
+            paw1.position.set(-0.04, 0.01, 0.07);
+            catGroup.add(paw1);
+            const paw2 = new THREE.Mesh(pawGeometry, bodyMaterial);
+            paw2.position.set(0.04, 0.01, 0.07);
+            catGroup.add(paw2);
+            // Front left paw (licking paw, will animate)
+            const frontPawL = new THREE.Mesh(pawGeometry, bodyMaterial);
+            frontPawL.position.set(-0.03, 0.06, 0.13);
+            catGroup.add(frontPawL);
+            // Front right paw (static)
+            const frontPawR = new THREE.Mesh(pawGeometry, bodyMaterial);
+            frontPawR.position.set(0.03, 0.03, 0.13);
+            catGroup.add(frontPawR);
+            // Eyes
+            const eyeGeometry = new THREE.SphereGeometry(0.012, 8, 8);
+            const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x222222 });
+            const eye1 = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            eye1.position.set(-0.025, 0.29, 0.16);
+            catGroup.add(eye1);
+            const eye2 = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            eye2.position.set(0.025, 0.29, 0.16);
+            catGroup.add(eye2);
+            // Nose
+            const noseGeometry = new THREE.ConeGeometry(0.008, 0.018, 8);
+            const noseMaterial = new THREE.MeshBasicMaterial({ color: 0xff8888 });
+            const nose = new THREE.Mesh(noseGeometry, noseMaterial);
+            nose.position.set(0, 0.28, 0.18);
+            nose.rotation.x = Math.PI / 2;
+            catGroup.add(nose);
+            // Whiskers (lines)
+            const whiskerMaterial = new THREE.LineBasicMaterial({ color: 0x222222 });
+            const whiskerGeom1 = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-0.02, 0.28, 0.18), new THREE.Vector3(-0.05, 0.28, 0.18)
+            ]);
+            const whiskerGeom2 = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(0.02, 0.28, 0.18), new THREE.Vector3(0.05, 0.28, 0.18)
+            ]);
+            catGroup.add(new THREE.Line(whiskerGeom1, whiskerMaterial));
+            catGroup.add(new THREE.Line(whiskerGeom2, whiskerMaterial));
+            // Place cat randomly along the corridor
+            catGroup.position.set(
+                (Math.random() - 0.5) * 7.5,
+                0.09,
+                -Math.random() * 90 - 5
             );
-            heart.userData = {
-                speed: 0.02 + Math.random() * 0.02,
-                offset: Math.random() * Math.PI * 2
+            // Animation state
+            catGroup.userData = {
+                animOffset: Math.random() * Math.PI * 2
             };
-            this.scene.add(heart);
+            this.scene.add(catGroup);
+            this.cats.push(catGroup);
+            // Set initial meow timer (random 10-20s)
+            this.catMeowTimers.push(10 + Math.random() * 10);
         }
     }
 
@@ -237,7 +279,14 @@ class Game {
             roughness: 0.5,
             metalness: 0.5
         });
-
+        const doorTexts = [
+            "The twoo pookers",
+            "Roundookers",
+            "Elevookers",
+            "Smookers",
+            "Hotookers",
+            "LARRY"
+        ];
         // Create 6 doors
         for (let i = 0; i < 6; i++) {
             const door = new THREE.Mesh(doorGeometry, doorMaterial);
@@ -248,7 +297,8 @@ class Game {
                 isLast: i === 5,
                 image: `assets/door${i + 1}.jpg`,
                 isOpen: false,
-                isVisible: true
+                isVisible: true,
+                text: doorTexts[i]
             };
             this.scene.add(door);
             this.doors.push(door);
@@ -287,7 +337,10 @@ class Game {
         window.addEventListener('touchend', () => this.handleJoystickEnd());
 
         // Modal close button
-        document.getElementById('closeModal').addEventListener('click', () => this.closeModal());
+        document.getElementById('closeModal').addEventListener('click', () => {
+            this.closeModal();
+            this.disableMovement = false;
+        });
     }
 
     handleJoystickStart(e) {
@@ -330,6 +383,7 @@ class Game {
     }
 
     updatePlayer() {
+        if (this.disableMovement || this.modalOpen) return;
         // Update player position based on joystick input
         const moveSpeed = this.player.speed;
         const rotationSpeed = this.player.rotationSpeed;
@@ -380,34 +434,41 @@ class Game {
 
     openDoor(door) {
         if (door.userData.isOpen) return; // Prevent multiple triggers
-
         door.userData.isOpen = true;
         door.rotation.y = Math.PI / 2;
-
         if (door.userData.isLast) {
             this.showWinEffect(door.userData.image);
         } else {
-            this.showModal(door.userData.image);
-            // Start timer to close modal
-            setTimeout(() => {
-                this.closeModal();
-                // Hide the current door
-                door.visible = false;
-                door.userData.isVisible = false;
-            }, 3000);
+            this.showModal(door.userData.image, door.userData.text);
+            this.disableMovement = true;
+            // No timer: only close on button
         }
     }
 
-    showModal(imageSrc) {
+    showModal(imageSrc, text) {
         const modal = document.getElementById('modal');
         const modalImage = document.getElementById('modalImage');
+        let modalText = document.getElementById('modalText');
+        if (!modalText) {
+            modalText = document.createElement('div');
+            modalText.id = 'modalText';
+            modalText.style.marginTop = '10px';
+            modalText.style.fontSize = '1.5em';
+            modalText.style.color = '#ff69b4';
+            modalText.style.fontWeight = 'bold';
+            modalText.style.textShadow = '0 2px 8px #fff, 0 0 10px #ffb6c1';
+            modalImage.parentNode.insertBefore(modalText, modalImage.nextSibling);
+        }
         modalImage.src = imageSrc;
+        modalText.textContent = text || '';
         modal.style.display = 'block';
+        this.modalOpen = true;
     }
 
     closeModal() {
         const modal = document.getElementById('modal');
         modal.style.display = 'none';
+        this.modalOpen = false;
     }
 
     showWinEffect(imageSrc) {
@@ -415,18 +476,30 @@ class Game {
         const finalImage = document.getElementById('finalImage');
         finalImage.src = imageSrc;
         winEffect.style.display = 'block';
-        this.createConfetti();
-    }
-
-    createConfetti() {
-        const confettiContainer = document.querySelector('.confetti-container');
-        for (let i = 0; i < 100; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.animationDelay = Math.random() * 3 + 's';
-            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            confettiContainer.appendChild(confetti);
+        // Animate modal (scale/fade-in)
+        finalImage.style.transform = 'scale(0.7)';
+        finalImage.style.opacity = '0';
+        setTimeout(() => {
+            finalImage.style.transition = 'transform 0.7s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.7s';
+            finalImage.style.transform = 'scale(1)';
+            finalImage.style.opacity = '1';
+        }, 10);
+        // Show heart overlay
+        const heartOverlay = document.getElementById('heartOverlay');
+        if (heartOverlay) {
+            heartOverlay.innerHTML = '';
+            heartOverlay.style.display = 'block';
+            for (let i = 0; i < 40; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = (Math.random() * 2) + 's';
+                heart.innerHTML = `<svg viewBox="0 0 32 29.6"><path fill="#ff69b4" d="M23.6,0c-2.6,0-5,1.3-6.6,3.3C15.4,1.3,13,0,10.4,0C4.7,0,0,4.7,0,10.4c0,6.1,5.1,11.1,12.8,18.2l2.2,2l2.2-2C26.9,21.5,32,16.5,32,10.4C32,4.7,27.3,0,23.6,0z"/></svg>`;
+                heartOverlay.appendChild(heart);
+            }
+            setTimeout(() => {
+                heartOverlay.style.display = 'none';
+            }, 5000);
         }
     }
 
@@ -449,18 +522,33 @@ class Game {
 
     animate() {
         requestAnimationFrame(() => this.animate());
-        
+        // Animate cats
+        if (this.cats) {
+            const t = Date.now() * 0.002;
+            for (let i = 0; i < this.cats.length; i++) {
+                const cat = this.cats[i];
+                // Paw licking animation (front left paw moves up and down, head tilts)
+                if (cat.children[7]) {
+                    cat.children[7].position.y = 0.06 + Math.abs(Math.sin(t * 2 + cat.userData.animOffset)) * 0.04;
+                    cat.children[7].position.x = -0.03 + Math.sin(t * 2 + cat.userData.animOffset) * 0.01;
+                }
+                if (cat.children[1]) {
+                    cat.children[1].rotation.z = Math.sin(t * 2 + cat.userData.animOffset) * 0.18;
+                }
+                // Meow timer
+                this.catMeowTimers[i] -= 0.016;
+                if (this.catMeowTimers[i] <= 0) {
+                    if (this.catMeowAudio) {
+                        this.catMeowAudio.currentTime = 0;
+                        this.catMeowAudio.play();
+                    }
+                    this.catMeowTimers[i] = 10 + Math.random() * 10;
+                }
+            }
+        }
         // Update player position and check collisions
         this.updatePlayer();
         
-        // Animate floating hearts
-        this.scene.children.forEach(child => {
-            if (child.userData && child.userData.speed) {
-                child.position.y += Math.sin(Date.now() * child.userData.speed + child.userData.offset) * 0.01;
-                child.rotation.y += 0.01;
-            }
-        });
-
         // Render the scene
         this.renderer.render(this.scene, this.camera);
     }
