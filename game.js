@@ -484,6 +484,9 @@ class Game {
             finalImage.style.transform = 'scale(1)';
             finalImage.style.opacity = '1';
         }, 10);
+        // Change the win text to 'LARRY'
+        const winText = winEffect.querySelector('h2');
+        if (winText) winText.textContent = 'LARRY';
         // Show heart overlay
         const heartOverlay = document.getElementById('heartOverlay');
         if (heartOverlay) {
